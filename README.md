@@ -2,7 +2,8 @@
 A program to scrape **every** sneaker on StockX! 
 
 ## About
-> I wrote this program to scrape data for my sneaker application, Venture Kicks! Check it out when you have the chance :)
+>**This scraper is modifed based on chaseahn's github repo in 2019; I have made a couple of changes based on the website's updates.**
+>**below is the original github repo link: https://github.com/chaseahn/StockX-Scraper"**
 
 ## Dependencies
 ```python
@@ -23,7 +24,3 @@ pip install selenium
 python3 1-url_scraper.py
 python3 2-sneaker_scraper.py
 python3 3-image_downloader.py
-```
-
-## Contact Me
-chaseahn4@gmail.com
