@@ -1,21 +1,152 @@
 import all_API
+from time import sleep
+###TODO:
+#add more documentation on what this file does
+#reexamine type list to make it more holistic
+#need try except headers and print warning in all_API search, after finished deleting the header information in all_API_test
+
+############################################### below is to make object stockx #################################################################################################
 
 stockx = all_API.StockX()
 
-# stockx的使用示例
+############################################### below are the headers information that we use to avoid getting caught  #########################################################
 
-# search 方程的调用
-# search(type, category, size, gender, year, lowest_range, highest_range, page)
+#different people will have different header files in case of clashing
+header_list = []
+f = open("headers_new","r")
+lines = f.readlines()
+for line in lines:
+    line = line.strip()
+    header_list.append(line)
+
+############################################### below are all the data type needed to segment the APIs  ########################################################################
+
+year_dict = {"0":4374,"1985":3,"1986":2,"1988":1,"1989":5,"1990":2,"1991":5,"1992":5,"1993":8,"1994":10,"1995":8,
+"1996":7,"1997":10,"1998":10,"1999":21,"2000":23,"2001":51,"2002":63,"2003":96,"2004":132,"2005":226,
+"2006":292,"2007":310,"2008":510,"2009":433,"2010":353,"2011":377,"2012":610,"2013":939,"2014":1177,
+"2015":1436,"2016":2575,"2017":4633,"2018":6488,"2019":7112,"2020":6193,"2021":75}
+#by brand
+brand_dict = {"Nike":21229,"adidas":7955,"Jordan":5735,"Vans":2195,"New Balance":1953,"Converse":1308,
+"Reebok":1293,"Puma":1241,"ASICS":884,"Balenciaga":465,"Under Armour":381,"Saucony":360,
+"OFF-WHITE":225,"Gucci":217,"Fila":195,"Timberland":193,"Diadora":180,"Dior":156,"Clarks":137,
+"BAPE":135,"Yeezy":116,"Louis Vuitton":115,"Ewing Athletics":97,"Li-Ning":94,"K-Swiss":89,
+"Alexander McQueen":87,"Dr. Martens":85,"DC Shoes":82,"Mizuno":75,"Crocs":58,"Versace":57,
+"Karhu":50,"Salomon":46,"FEAR OF GOD":44,"Hoka One One":38,"Suicoke":38,"John Geiger":37,
+"KangaROOS":37,"Common Projects":32,"Burberry":31,"Chanel":29,"Saint Laurent":26,
+"Polo Ralph Lauren":25,"Supra":25,"Onitsuka Tiger":24,"Hummel":21,"Le Coq Sportif":21,
+"Sonra":20,"The North Face":20,"es":20,"Brooks":19,"Birkenstock":17,"Filling Pieces":17,
+"Prada":17,"Rhude":13,"Superga":12,"Mercer":11,"Pro Keds":11,"Hender Scheme":10,"Osiris":10,
+"Represent":10,"UGG":10,"Veja":10,"Sandalboyz":9,"Tretorn":9,"And1":8,"Kith":8,"PF Flyers":8,
+"Sperry":8,"Cole Haan":7,"Globe":7,"Big Baller Brand":6,"On":6,"Anta":5,"Athletic Propulsion Labs":5,
+"Brandblack":5,"CLAE":5,"Ellesse":5,"Lakai":5,"Ubiq":5,"Chalk Line Apparel":4,"Circa":4,"Dsquared2":4,
+"Gravis":4,"Ice Cream":4,"Merrell":4,"Moncler":4,"Padmore & Barnes":4,"Starwalk":4,
+"Stepney Workers Club":4,"Tommy Hilfiger":4,"Aime Leon Dore":3,"Arc Originals":3,"Boris Bidjan Saberi":3,
+"Diemme":3,"Etonic":3,"FTP":3,"GANT":3,"Kickers":3,"Lacoste":3}
+#by gender
+gender_dict={"men":37067,"women":6200,"child":3243,"preschool":958,"toddler":875,"infant":73,"unisex":4}
+
+year_list = list(year_dict.keys())
+print(year_list)
+brand_list = list(brand_dict.keys())
+print(brand_list)   #brand CANNOT have capital letters in!
+                    # some brandes' API are catogorized in other, e.g, 
+                    #"https://stockx.com/api/browse?_tags=other" 
+                    #instead of "https://stockx.com/api/browse?_tags=alexander-mcqueen"
+#clean brand_list
+gender_list = list(gender_dict.keys())
+print(gender_list)
+release_time_list = list(release_time_dict.keys())
+#print(release_time_list)
+#I highly doubt if we need to examin the brand list and compare it with the type list over here
+type_list = ["adidas","air-jordan","nike","other-brands","luxury-brands","collections"]  
+shoeSize_list = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5，14,14.5,15,15.5,16]
+
+############################################## below is the function that calls search to segment APIs and extract IDs ########################################################
+
+def find_id(shoeType, year, brand, gender,shoeSize,missing):
+    #with the cleaned data sets try to have all combinations of api that limit return results to <1000
+    #start from root url
+    #if >1000, add year
+    #if >1000, add gender
+    id_list = []
+    f = open(missing,"a")
+    root_url = "https://stockx.com/api/browse?_tags="
+    for i in range(len(shoeType)):
+        #first go through the type list and see if request by brand will limit the number of results under 1000
+        data = stockx.search(shoeType[i], "sneakers", None, None, None, None, None, None)
+        total_no = data["Pagination"]["total"]
+        time.sleep(5) #after every api call, sleep for 15 secs
+        if total_no > 1000:
+            print("Oops! Too many shoes for "+str(shoeType[i]))
+            print("Narrow search with year")
+            for j in range(len(year)):
+                #if not, add another limit year and see if that will limit the number of results under 1000
+                data = stockx.search(shoeType[i], "sneakers", None, None, year[j], None, None, None)
+                total_no = data["Pagination"]["total"]
+                time.sleep(5) #after every api call, sleep for 15 secs
+                if total_no >1000:
+                    print("Oops! Too many shoes for "+str(shoeType[i])+ "in " + str(year[j])
+                    print("Narrow search with gender")
+                    for k in range(len(gender)):
+                        #if not, add another limit gender and see if that will limit the number of results under 1000
+                        data = stockx.search(shoeType[i], "sneakers", None, gender[k], year[j], None, None, None)
+                        total_no = data["Pagination"]["total"]
+                        time.sleep(5) #after every api call, sleep for 15 secs
+                        if total_no>1000:
+                            #if not, add another limit shoe size and see if that will limit the number of results under 1000
+                            print("Oops! Too many shoes for "+str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k]))
+                            print("Narrow search with shoe size")
+                            for n in range(len(shoeSize)):
+                                data = stockx.search(shoeType[i], "sneakers", shoeSize[n], gender[k], year[j], None, None, None)
+                                total_no = data["Pagination"]["total"]
+                                time.sleep(5) #after every api call, sleep for 15 secs
+                                if total_no>1000:
+                                    #at this point we should cover most shoes, but if not, write the url into file all_missing_shoe_list.txt for further examination
+                                    print("Oops! Too many shoes for "+str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k])+" in size "+
+                                    shoeSize[n] +". Put in file and check out later with more detailed segmentation")
+                                    f.writelines(root_url+str(shoeType[i])+"&productCategory=sneakers&shoeSize="+shoeSize[n]+"&gender="+gender[k]+"&year="+year[j]+
+                                        "&market.lowestAsk=range(300|200)&&page=1sort=recent_asks&order=DESC")
+                                else:
+                                    print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k])+" in size "+shoeSize[n])
+                                    for d in range(0, len(data["Products"])):
+                                        id = data["Products"][d]["id"]
+                                        id_list.append(id)
+                                        print("Total id number is : "+len(id_list))
+                        else:
+                            print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k]))
+                            for d in range(0, len(data["Products"])):
+                                id = data["Products"][d]["id"]
+                                id_list.append(id)
+                                print("Total id number is : "+len(id_list))
+                else:
+                    print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j]))
+                    for d in range(0, len(data["Products"])):
+                        id = data["Products"][d]["id"]
+                        id_list.append(id)
+                        print("Total id number is : "+len(id_list))
+        else:
+            print("Yeah! Extracting ID for "+ str(shoeType[i]))
+            for d in range(0, len(data["Products"])):
+                id = data["Products"][d]["id"]
+                id_list.append(id)
+                print("Total id number is : "+len(id_list))
+    
+    return id_list, len(id_list)
+
+                    
+                      
+
+             
 
 
-type_list = ["adidas","air jordan","nike","other brands","luxury brands","collections"]
-
-def find_id(shoetype,lowest_range, highest_range):
+'''def find_id(shoetype,lowest_range, highest_range):
     id_list = []
     for i in range(1, 25):
         data = stockx.search(shoetype, "sneakers", None, None, None, lowest_range, highest_range, i)
         total_no = data["Pagination"]["total"]
         if total_no > 1000:
+
+
             highest_range = highest_range - 10
             find_id(shoetype,lowest_range, highest_range)
             for j in range(0, len(data["Products"])):
@@ -56,18 +187,6 @@ def find_url(shoetype, lowest_price, highest_price):
             total_no = data["Pagination"]["total"]
             # 这边按照1到18 0.5为间隔做切割
 
-
-
-
-
-
-
-
-
-
-
-
-
 ##方程一，stockx.search
 
 #data = stockx.search("adidas", "sneakers", "10.5", "women", "2019", "200", "300",1)
@@ -82,32 +201,23 @@ def find_url(shoetype, lowest_price, highest_price):
 
 
 ##方程三，stockx.time_price_dataset
-'''
+
 data = stockx.time_price_dataset("7434fd9f-8f45-4beb-9d57-b641d253ff65")
 print(data)
-'''
+
 
 ##方程四，stockx.time_price
-'''
 time_price_data = stockx.time_price(data)
 print(time_price_data)
-'''
 
 
 ##方程五，stockx.item_info
-'''
 info = stockx.item_info("7434fd9f-8f45-4beb-9d57-b641d253ff65")
 print(info)
-'''
-
 ##方程六，stockx.item_sell
-'''
 sell = stockx.item_sell("7434fd9f-8f45-4beb-9d57-b641d253ff65")
 print(sell)
-'''
-
 #stockx.item_info("7434fd9f-8f45-4beb-9d57-b641d253ff65")
-
 #file = open('7434fd9f-8f45-4beb-9d57-b641d253ff65_info.txt', 'r')
 #a = file.readlines()["Products"][0]
 #print(a)
@@ -143,6 +253,6 @@ complexshoe = ["one,air force,nike","90,air max,nike","other,air max,nike","othe
 
 nike = ["dunk low,nike","dunk high,nike","kobe,nike","lebron,nike","97,air max,nike","1,air max,nike","kd,nike"]
 adidaslist = ["yeezy","ultra boost,adidas","nmd,adidas","stan smith,adidas","iniki,adidas","eqt,adidas"]
-otherbands = ["asics","diadora","li-ning","reebok","saucony","under armour"]
+otherbands = ["asics","diadora","li-ning","reebok","saucony","under armour"]'''
 
 
