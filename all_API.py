@@ -86,7 +86,10 @@ class StockX():
                     "Accept-Language": "zh-CN,zh;q=0.8"}
                 r = requests.get(url = URL, headers=send_headers)
             else:
-                print("We have used all headers!! Abort the program!!")
+                print("We have used all headers!! Save current progress and abort the program!!")
+                f = open("all_missing_shoe_list.txt","a")
+                f.writelines(str(temp_url))
+                f.close()
                 break
         data = r.json()
         return data

@@ -54,12 +54,21 @@ shoeSize_list = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,1
 ############################################## below is the function that calls search to segment APIs and extract IDs ########################################################
 
 def find_id(shoeType, year, brand, gender,shoeSize,missing):
+    '''
+    takes in these variables: shoeType -> brand_list -> all the brands for the shoes
+                               year    -> year_list -> all release years for the shoes
+                               gender  -> gender_list -> all genders for the shoes
+                               shoeSize -> shoeSize_list -> all shoe sizes for the shoes
+                               missing -> all_missing_shoe_list.txt -> txt file used to save shoes that cannot be segmented to under 1000
+    '''                          
     #with the cleaned data sets try to have all combinations of api that limit return results to <1000
     #start from root url
     #if >1000, add year
     #if >1000, add gender
+    #if >1000, add shoeSize
+    #if >1000, add the link to missing and we can print it out and see for ourselves
     id_list = []
-    f = open(missing,"a")
+    f = open(str(missing),"a")
     root_url = "https://stockx.com/api/browse?_tags="
     for i in range(len(shoeType)):
         #first go through the type list and see if request by brand will limit the number of results under 1000
@@ -96,6 +105,7 @@ def find_id(shoeType, year, brand, gender,shoeSize,missing):
                                     shoeSize[n] +". Put in file and check out later with more detailed segmentation")
                                     f.writelines(root_url+str(shoeType[i])+"&productCategory=sneakers&shoeSize="+shoeSize[n]+"&gender="+gender[k]+"&year="+year[j]+
                                         "&market.lowestAsk=range(300|200)&&page=1sort=recent_asks&order=DESC")
+                                    f.close()
                                 else:
                                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k])+" in size "+shoeSize[n])
                                     for d in range(0, len(data["Products"])):
