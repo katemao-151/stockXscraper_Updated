@@ -7,12 +7,15 @@ import urllib.request
 import shutil
 import re
 
+############################################### below are the headers information that we use to avoid getting caught  #########################################################
 
-send_headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
-        "Connection": "keep-alive",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-        "Accept-Language": "zh-CN,zh;q=0.8"}
+#different people will have different header files in case of clashing
+header_list = []
+f = open("headers_new","r")
+lines = f.readlines()
+for line in lines:
+    line = line.strip()
+    header_list.append(line)
 
 item_info_api = "https://stockx.com/api/products/%s/"
 item_info_api_2 = "https://stockx.com/api/products/%s/%s/"
@@ -40,6 +43,15 @@ class StockX():
         market_shoe = "market.lowestAsk=range(%s|%s)&"
         page_shoe = "&page=%s"
 
+        counter = 0
+        stop_count = len(header_list)-1
+
+        send_headers = {
+        "User-Agent": header_list[counter],
+        "Connection": "keep-alive",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Language": "zh-CN,zh;q=0.8"}
+
         #url = "https://stockx.com/api/browse?_tags=eqt,%s&productCategory=%s&shoeSize=%s&gender=%s&year=%s&market.lowestAsk=range(%s|%s)&sort=recent_asks&order=DESC"
         #https://stockx.com/api/browse?_tags=adidas&productCategory=sneakers&shoeSize=10.5&gender=women&year=2019&market.lowestAsk=range(300|200)&&page=1sort=recent_asks&order=DESC
         temp_url = ""
@@ -60,7 +72,22 @@ class StockX():
         URL = root_url%temp_url
         print(URL)
 
-        r = requests.get(url = URL, headers=send_headers)
+        try:
+            r = requests.get(url = URL, headers=send_headers)
+        except ValueError:
+            print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list-counter))+"left")
+            time.sleep(30)
+            if counter != stop_count:
+                counter +=1
+                send_headers = {
+                    "User-Agent": header_list[counter],
+                    "Connection": "keep-alive",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                    "Accept-Language": "zh-CN,zh;q=0.8"}
+                r = requests.get(url = URL, headers=send_headers)
+            else:
+                print("We have used all headers!! Abort the program!!")
+                break
         data = r.json()
         return data
 

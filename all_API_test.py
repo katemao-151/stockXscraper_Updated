@@ -9,16 +9,6 @@ from time import sleep
 
 stockx = all_API.StockX()
 
-############################################### below are the headers information that we use to avoid getting caught  #########################################################
-
-#different people will have different header files in case of clashing
-header_list = []
-f = open("headers_new","r")
-lines = f.readlines()
-for line in lines:
-    line = line.strip()
-    header_list.append(line)
-
 ############################################### below are all the data type needed to segment the APIs  ########################################################################
 
 year_dict = {"0":4374,"1985":3,"1986":2,"1988":1,"1989":5,"1990":2,"1991":5,"1992":5,"1993":8,"1994":10,"1995":8,
