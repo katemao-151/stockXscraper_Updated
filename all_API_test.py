@@ -110,28 +110,32 @@ def find_id(shoeType, year, gender,shoeSize):
                                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k])+" in size "+shoeSize[n])
                                     for d in range(0, len(data["Products"])):
                                         id = data["Products"][d]["id"]
-                                        id_list.append(id)
-                                        print("Total id number is : "+ str(len(id_list)))
+                                        if id not in id_list:
+                                            id_list.append(id)
+                                    print("Total id number is : "+ str(len(id_list)))
                         else:
                             print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k]))
                             for d in range(0, len(data["Products"])):
                                 id = data["Products"][d]["id"]
-                                id_list.append(id)
-                                print("Total id number is : "+ str(len(id_list)))
+                                if id not in id_list:
+                                    id_list.append(id)
+                            print("Total id number is : "+ str(len(id_list)))
                 else:
                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j]))
                     for d in range(0, len(data["Products"])):
                         id = data["Products"][d]["id"]
-                        id_list.append(id)
-                        print("Total id number is : "+ str(len(id_list)))
+                        if id not in id_list:
+                            id_list.append(id)
+                    print("Total id number is : "+ str(len(id_list)))
         else:
             print("Yeah! Extracting ID for "+ str(shoeType[i]))
             for d in range(0, len(data["Products"])):
                 id = data["Products"][d]["id"]
-                id_list.append(id)
-                print("Total id number is : "+ str(len(id_list)))
+                if id not in id_list:
+                    id_list.append(id)
+            print("Total id number is : "+ str(len(id_list)))
     
-    return id_list, len(id_list)
+    return id_list
 
 
 print(find_id(["adidas"],[2010],["women"],[10.5]))
