@@ -1,5 +1,6 @@
 import all_API
 from time import sleep
+import os
 ###TODO:
 #add more documentation on what this file does
 #reexamine type list to make it more holistic
@@ -113,6 +114,16 @@ def find_id(shoeType, year, gender,shoeSize):
                                         if id not in id_list:
                                             id_list.append(id)
                                     print("Total id number is : "+ str(len(id_list)))
+                                    path_id = "%s_%s_%s_%s_id.txt" %(shoeType,year,gender,shoeSize)
+                                    if os.path.exists(path_id):
+                                        os.remove(path_id)
+                                        f = open(path_id, 'w')
+                                        for i in id_list:
+                                            f.write(i + "\n")
+                                    else:
+                                        f = open(path_id, 'w')
+                                        for i in id_list:
+                                            f.write(i + "\n")
                         else:
                             print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k]))
                             for d in range(0, len(data["Products"])):
@@ -120,6 +131,16 @@ def find_id(shoeType, year, gender,shoeSize):
                                 if id not in id_list:
                                     id_list.append(id)
                             print("Total id number is : "+ str(len(id_list)))
+                            path_id = "%s_%s_%s_%s_id.txt" %(shoeType,year,gender,shoeSize)
+                            if os.path.exists(path_id):
+                                os.remove(path_id)
+                                f = open(path_id, 'w')
+                                for i in id_list:
+                                    f.write(i + "\n")
+                            else:
+                                f = open(path_id, 'w')
+                                for i in id_list:
+                                    f.write(i + "\n")
                 else:
                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j]))
                     for d in range(0, len(data["Products"])):
@@ -127,6 +148,16 @@ def find_id(shoeType, year, gender,shoeSize):
                         if id not in id_list:
                             id_list.append(id)
                     print("Total id number is : "+ str(len(id_list)))
+                    path_id = "%s_%s_%s_%s_id.txt" %(shoeType,year,gender,shoeSize)
+                    if os.path.exists(path_id):
+                        os.remove(path_id)
+                        f = open(path_id, 'w')
+                        for i in id_list:
+                            f.write(i + "\n")
+                    else:
+                        f = open(path_id, 'w')
+                        for i in id_list:
+                            f.write(i + "\n")
         else:
             print("Yeah! Extracting ID for "+ str(shoeType[i]))
             for d in range(0, len(data["Products"])):
@@ -134,7 +165,16 @@ def find_id(shoeType, year, gender,shoeSize):
                 if id not in id_list:
                     id_list.append(id)
             print("Total id number is : "+ str(len(id_list)))
-    
+            path_id = "%s_%s_%s_%s_id.txt" %(shoeType,year,gender,shoeSize)
+            if os.path.exists(path_id):
+                os.remove(path_id)
+                f = open(path_id, 'w')
+                for i in id_list:
+                    f.write(i + "\n")
+            else:
+                f = open(path_id, 'w')
+                for i in id_list:
+                    f.write(i + "\n")
     return id_list
 
 
