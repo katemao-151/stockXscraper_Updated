@@ -11,7 +11,7 @@ import re
 
 #different people will have different header files in case of clashing
 header_list = []
-f = open("headers_new","r")
+f = open("headers_new.txt","r")
 lines = f.readlines()
 for line in lines:
     line = line.strip()
@@ -90,7 +90,7 @@ class StockX():
                 f = open("all_missing_shoe_list.txt","a")
                 f.writelines(str(temp_url))
                 f.close()
-                break
+                return 0
         data = r.json()
         return data
 

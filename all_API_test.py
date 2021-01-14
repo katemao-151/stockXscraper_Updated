@@ -45,15 +45,15 @@ print(brand_list)   #brand CANNOT have capital letters in!
 #clean brand_list
 gender_list = list(gender_dict.keys())
 print(gender_list)
-release_time_list = list(release_time_dict.keys())
+#release_time_list = list(release_time_dict.keys())
 #print(release_time_list)
 #I highly doubt if we need to examin the brand list and compare it with the type list over here
 type_list = ["adidas","air-jordan","nike","other-brands","luxury-brands","collections"]  
-shoeSize_list = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5，14,14.5,15,15.5,16]
+shoeSize_list = [1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13,13.5,14,14.5,15,15.5,16]
 
 ############################################## below is the function that calls search to segment APIs and extract IDs ########################################################
 
-def find_id(shoeType, year, brand, gender,shoeSize,missing):
+def find_id(shoeType, year, gender,shoeSize):
     '''
     takes in these variables: shoeType -> brand_list -> all the brands for the shoes
                                year    -> year_list -> all release years for the shoes
@@ -68,13 +68,13 @@ def find_id(shoeType, year, brand, gender,shoeSize,missing):
     #if >1000, add shoeSize
     #if >1000, add the link to missing and we can print it out and see for ourselves
     id_list = []
-    f = open(str(missing),"a")
+    f = open("all_missing_shoe_list.txt","a")
     root_url = "https://stockx.com/api/browse?_tags="
     for i in range(len(shoeType)):
         #first go through the type list and see if request by brand will limit the number of results under 1000
         data = stockx.search(shoeType[i], "sneakers", None, None, None, None, None, None)
         total_no = data["Pagination"]["total"]
-        time.sleep(5) #after every api call, sleep for 15 secs
+        sleep(5) #after every api call, sleep for 15 secs
         if total_no > 1000:
             print("Oops! Too many shoes for "+str(shoeType[i]))
             print("Narrow search with year")
@@ -82,9 +82,9 @@ def find_id(shoeType, year, brand, gender,shoeSize,missing):
                 #if not, add another limit year and see if that will limit the number of results under 1000
                 data = stockx.search(shoeType[i], "sneakers", None, None, year[j], None, None, None)
                 total_no = data["Pagination"]["total"]
-                time.sleep(5) #after every api call, sleep for 15 secs
+                sleep(5) #after every api call, sleep for 15 secs
                 if total_no >1000:
-                    print("Oops! Too many shoes for "+str(shoeType[i])+ "in " + str(year[j])
+                    print("Oops! Too many shoes for "+str(shoeType[i])+ "in " + str(year[j]))
                     print("Narrow search with gender")
                     for k in range(len(gender)):
                         #if not, add another limit gender and see if that will limit the number of results under 1000
@@ -111,32 +111,30 @@ def find_id(shoeType, year, brand, gender,shoeSize,missing):
                                     for d in range(0, len(data["Products"])):
                                         id = data["Products"][d]["id"]
                                         id_list.append(id)
-                                        print("Total id number is : "+len(id_list))
+                                        print("Total id number is : "+ str(len(id_list)))
                         else:
                             print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k]))
                             for d in range(0, len(data["Products"])):
                                 id = data["Products"][d]["id"]
                                 id_list.append(id)
-                                print("Total id number is : "+len(id_list))
+                                print("Total id number is : "+ str(len(id_list)))
                 else:
                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j]))
                     for d in range(0, len(data["Products"])):
                         id = data["Products"][d]["id"]
                         id_list.append(id)
-                        print("Total id number is : "+len(id_list))
+                        print("Total id number is : "+ str(len(id_list)))
         else:
             print("Yeah! Extracting ID for "+ str(shoeType[i]))
             for d in range(0, len(data["Products"])):
                 id = data["Products"][d]["id"]
                 id_list.append(id)
-                print("Total id number is : "+len(id_list))
+                print("Total id number is : "+ str(len(id_list)))
     
     return id_list, len(id_list)
 
-                    
-                      
 
-             
+print(find_id(["adidas"],[2010],["women"],[10.5]))
 
 
 '''def find_id(shoetype,lowest_range, highest_range):
