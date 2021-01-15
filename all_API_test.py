@@ -39,7 +39,14 @@ gender_dict={"men":37067,"women":6200,"child":3243,"preschool":958,"toddler":875
 year_list = list(year_dict.keys())
 print(year_list)
 #brand_list = list(brand_dict.keys())
-brand_list = ['nike','adidas','jordan','vans','new balance','under armour','converse','reebok','puma','balenciaga','asics','saucony','off-white','gucci','fila','other','timberland','diadora','dior','clarks','bape','yeezy','louis vuitton','ewing athletics',]
+brand_list = ['nike','adidas','jordan','vans','new balance','under armour','converse','reebok','puma','balenciaga','asics',
+'saucony','off-white','gucci','fila','other','timberland','diadora','dior','clarks','bape','yeezy','louis vuitton',
+'ewing athletics','li-ning','k-swiss','dr. martens','dc shoes','mizuno','crocs','versace','karhu','salomon','fear of god','hoka one one'
+'suicoke','john-geiger','kangaroos','common projects','burberry','chanel','saint laurent','polo ralph lauren','supra','onitsuka tiger',
+'hummel','le coq sportif','sonra','the north face','es','brooks','birkenstock','filling pieces','prada','rhude','superga','mercer',
+'pro keds','hender scheme','osiris','represent','ugg','sandalboyz','tretorn','and1','kith','pf flyers','sperry','cole haan','globe','big baller brand',
+'on','anta','athletic propulsion labs','brandblack','clae','ellesse','lakai','ubiq','chalk line apparel','circa','dsquared2','gravis','merrell','moncler','starwalk',
+'stepney workers club','tommy hilfiger','aime leon dore','arc originals','boris bidjan saberi','diemme','etonic','ftp','gant','kickers','lacoste']
 print(brand_list)   #brand CANNOT have capital letters in!
                     # some brandes' API are catogorized in other, e.g, 
                     #"https://stockx.com/api/browse?_tags=other" 
