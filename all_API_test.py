@@ -69,7 +69,8 @@ def find_id(shoeType, year, gender,shoeSize):
     #if >1000, add shoeSize
     #if >1000, add the link to missing and we can print it out and see for ourselves
     id_list = []
-    f = open("all_missing_shoe_list.txt","a")
+    f_missing = open("all_missing_shoe_list.txt","a")
+    f_no_id = open("no_id_file.txt","a")
     root_url = "https://stockx.com/api/browse?_tags="
     for i in range(len(shoeType)):
         #first go through the type list and see if request by brand will limit the number of results under 1000
@@ -85,36 +86,40 @@ def find_id(shoeType, year, gender,shoeSize):
                 total_no = data["Pagination"]["total"]
                 sleep(5) #after every api call, sleep for 15 secs
                 if total_no >1000:
-                    print("Oops! Too many shoes for "+str(shoeType[i])+ "in " + str(year[j]))
+                    print("Oops! Too many shoes for "+str(shoeType[i])+ " in " + str(year[j]))
                     print("Narrow search with gender")
                     for k in range(len(gender)):
                         #if not, add another limit gender and see if that will limit the number of results under 1000
                         data = stockx.search(shoeType[i], "sneakers", None, gender[k], year[j], None, None, None)
                         total_no = data["Pagination"]["total"]
-                        time.sleep(5) #after every api call, sleep for 15 secs
+                        sleep(5) #after every api call, sleep for 15 secs
                         if total_no>1000:
                             #if not, add another limit shoe size and see if that will limit the number of results under 1000
-                            print("Oops! Too many shoes for "+str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k]))
+                            print("Oops! Too many shoes for "+str(shoeType[i])+ " in " + str(year[j])+ " for "+str(gender[k]))
                             print("Narrow search with shoe size")
                             for n in range(len(shoeSize)):
                                 data = stockx.search(shoeType[i], "sneakers", shoeSize[n], gender[k], year[j], None, None, None)
                                 total_no = data["Pagination"]["total"]
-                                time.sleep(5) #after every api call, sleep for 15 secs
+                                sleep(5) #after every api call, sleep for 15 secs
                                 if total_no>1000:
                                     #at this point we should cover most shoes, but if not, write the url into file all_missing_shoe_list.txt for further examination
-                                    print("Oops! Too many shoes for "+str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k])+" in size "+
+                                    print("Oops! Too many shoes for "+str(shoeType[i])+ " in " + str(year[j])+ " for"+ str(gender[k])+" in size "+
                                     shoeSize[n] +". Put in file and check out later with more detailed segmentation")
-                                    f.writelines(root_url+str(shoeType[i])+"&productCategory=sneakers&shoeSize="+shoeSize[n]+"&gender="+gender[k]+"&year="+year[j]+
+                                    f_missing.writelines(root_url+str(shoeType[i])+"&productCategory=sneakers&shoeSize="+shoeSize[n]+"&gender="+gender[k]+"&year="+year[j]+
                                         "&market.lowestAsk=range(300|200)&&page=1sort=recent_asks&order=DESC")
-                                    f.close()
+                                    f_missing.close()
                                 else:
-                                    print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k])+" in size "+shoeSize[n])
+                                    print("Yeah! Extracting ID for "+ str(shoeType[i])+ " in " + str(year[j])+ " for "+ str(gender[k])+" in size "+shoeSize[n])
                                     for d in range(0, len(data["Products"])):
-                                        id = data["Products"][d]["id"]
-                                        if id not in id_list:
-                                            id_list.append(id)
+                                        try:
+                                            id = data["Products"][d]["id"]
+                                            if id not in id_list:
+                                                id_list.append(id)
+                                        except IndexError:
+                                            print("Ouch there's no id for this shoe, something might be wrong......")
+                                            f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+str(gender[k])+" in size "+str(shoeSize[n])+" has no id.")
                                     print("Total id number is : "+ str(len(id_list)))
-                                    path_id = "%s_%s_%s_%s_id.txt" %(shoeType,year,gender,shoeSize)
+                                    path_id = "%s_%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k],shoeSize[n])
                                     if os.path.exists(path_id):
                                         os.remove(path_id)
                                         f = open(path_id, 'w')
@@ -125,13 +130,17 @@ def find_id(shoeType, year, gender,shoeSize):
                                         for i in id_list:
                                             f.write(i + "\n")
                         else:
-                            print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for"+ str(gender[k]))
+                            print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for "+ str(gender[k]))
                             for d in range(0, len(data["Products"])):
-                                id = data["Products"][d]["id"]
-                                if id not in id_list:
-                                    id_list.append(id)
+                                try: 
+                                    id = data["Products"][d]["id"]
+                                    if id not in id_list:
+                                        id_list.append(id)
+                                except IndexError:
+                                    print("Ouch there's no id for this shoe, something might be wrong......")
+                                    f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+str(gender[k])+" has no id.")
                             print("Total id number is : "+ str(len(id_list)))
-                            path_id = "%s_%s_%s_%s_id.txt" %(shoeType,year,gender,shoeSize)
+                            path_id = "%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k])
                             if os.path.exists(path_id):
                                 os.remove(path_id)
                                 f = open(path_id, 'w')
@@ -144,11 +153,15 @@ def find_id(shoeType, year, gender,shoeSize):
                 else:
                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j]))
                     for d in range(0, len(data["Products"])):
-                        id = data["Products"][d]["id"]
-                        if id not in id_list:
-                            id_list.append(id)
+                        try: 
+                            id = data["Products"][d]["id"]
+                            if id not in id_list:
+                                id_list.append(id)
+                        except IndexError:
+                            print("Ouch there's no id for this shoe, something might be wrong......")
+                            f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+" has no id.")
                     print("Total id number is : "+ str(len(id_list)))
-                    path_id = "%s_%s_%s_%s_id.txt" %(shoeType,year,gender,shoeSize)
+                    path_id = "%s_%s_id.txt" %(shoeType[i],year[j])
                     if os.path.exists(path_id):
                         os.remove(path_id)
                         f = open(path_id, 'w')
@@ -161,11 +174,15 @@ def find_id(shoeType, year, gender,shoeSize):
         else:
             print("Yeah! Extracting ID for "+ str(shoeType[i]))
             for d in range(0, len(data["Products"])):
-                id = data["Products"][d]["id"]
-                if id not in id_list:
-                    id_list.append(id)
+                try: 
+                    id = data["Products"][d]["id"]
+                    if id not in id_list:
+                        id_list.append(id)
+                except IndexError:
+                    print("Ouch there's no id for this shoe, something might be wrong......")
+                    f_no_id.writelines(str(shoeType[i])+" has no id.")
             print("Total id number is : "+ str(len(id_list)))
-            path_id = "%s_%s_%s_%s_id.txt" %(shoeType,year,gender,shoeSize)
+            path_id = "%s_id.txt" %(shoeType[i])
             if os.path.exists(path_id):
                 os.remove(path_id)
                 f = open(path_id, 'w')
@@ -178,7 +195,11 @@ def find_id(shoeType, year, gender,shoeSize):
     return id_list
 
 
-print(find_id(["adidas"],[2010],["women"],[10.5]))
+#print(find_id(["adidas"],[2010],["women"],[10.5]))
+
+#print(find_id(["adidas"],[2020],["women"],[1]))
+
+#print(find_id(["adidas"],[2020],["men"],[1]))
 
 
 '''def find_id(shoetype,lowest_range, highest_range):
