@@ -38,7 +38,8 @@ gender_dict={"men":37067,"women":6200,"child":3243,"preschool":958,"toddler":875
 
 year_list = list(year_dict.keys())
 print(year_list)
-brand_list = list(brand_dict.keys())
+#brand_list = list(brand_dict.keys())
+brand_list = ['nike','adidas','jordan','vans','new balance','under armour','converse','reebok','puma','balenciaga','asics','saucony','off-white','gucci','fila','other','timberland','diadora','dior','clarks','bape','yeezy','louis vuitton','ewing athletics',]
 print(brand_list)   #brand CANNOT have capital letters in!
                     # some brandes' API are catogorized in other, e.g, 
                     #"https://stockx.com/api/browse?_tags=other" 
@@ -82,6 +83,8 @@ def find_id(shoeType, year, gender,shoeSize):
             print("Narrow search with year")
             for j in range(len(year)):
                 #if not, add another limit year and see if that will limit the number of results under 1000
+                print("The count for year is "+str(j))
+                print(type(j))
                 data = stockx.search(shoeType[i], "sneakers", None, None, year[j], None, None, None)
                 total_no = data["Pagination"]["total"]
                 sleep(5) #after every api call, sleep for 15 secs
@@ -111,6 +114,7 @@ def find_id(shoeType, year, gender,shoeSize):
                                 else:
                                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ " in " + str(year[j])+ " for "+ str(gender[k])+" in size "+shoeSize[n])
                                     for d in range(0, len(data["Products"])):
+                                        print(d)
                                         try:
                                             id = data["Products"][d]["id"]
                                             if id not in id_list:
@@ -132,6 +136,7 @@ def find_id(shoeType, year, gender,shoeSize):
                         else:
                             print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for "+ str(gender[k]))
                             for d in range(0, len(data["Products"])):
+                                print(d)
                                 try: 
                                     id = data["Products"][d]["id"]
                                     if id not in id_list:
@@ -153,6 +158,7 @@ def find_id(shoeType, year, gender,shoeSize):
                 else:
                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j]))
                     for d in range(0, len(data["Products"])):
+                        print(d)
                         try: 
                             id = data["Products"][d]["id"]
                             if id not in id_list:
@@ -174,6 +180,7 @@ def find_id(shoeType, year, gender,shoeSize):
         else:
             print("Yeah! Extracting ID for "+ str(shoeType[i]))
             for d in range(0, len(data["Products"])):
+                print(d)
                 try: 
                     id = data["Products"][d]["id"]
                     if id not in id_list:
@@ -199,7 +206,7 @@ def find_id(shoeType, year, gender,shoeSize):
 
 #print(find_id(["adidas"],[2020],["women"],[1]))
 
-#print(find_id(["adidas"],[2020],["men"],[1]))
+print(find_id(["new balance"],year_list,gender_list,shoeSize_list))
 
 
 '''def find_id(shoetype,lowest_range, highest_range):
