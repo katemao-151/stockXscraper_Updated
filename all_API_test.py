@@ -1,6 +1,7 @@
 import all_API
 from time import sleep
 import os
+import math
 ###TODO:
 #add more documentation on what this file does
 #reexamine type list to make it more holistic
@@ -118,106 +119,123 @@ def find_id(shoeType, year, gender,shoeSize):
                                     f_missing.writelines(root_url+str(shoeType[i])+"&productCategory=sneakers&shoeSize="+shoeSize[n]+"&gender="+gender[k]+"&year="+year[j]+
                                         "&market.lowestAsk=range(300|200)&&page=1sort=recent_asks&order=DESC")
                                     f_missing.close()
+
                                 else:
                                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ " in " + str(year[j])+ " for "+ str(gender[k])+" in size "+shoeSize[n])
-                                    for d in range(0, len(data["Products"])):
-                                        print(d)
-                                        try:
-                                            id = data["Products"][d]["id"]
-                                            if id not in id_list:
-                                                id_list.append(id)
-                                        except IndexError:
-                                            print("Ouch there's no id for this shoe, something might be wrong......")
-                                            f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+str(gender[k])+" in size "+str(shoeSize[n])+" has no id.")
-                                    print("Total id number is : "+ str(len(id_list)))
-                                    path_id = "%s_%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k],shoeSize[n])
-                                    if os.path.exists(path_id):
-                                        os.remove(path_id)
-                                        f = open(path_id, 'w')
-                                        for i in id_list:
-                                            f.write(i + "\n")
-                                    else:
-                                        f = open(path_id, 'w')
-                                        for i in id_list:
-                                            f.write(i + "\n")
+                                    page_no = math.ceil(total_no/40.0)
+                                    for page in range(1, page_no):
+                                        data = stockx.search(shoeType[i], "sneakers", shoeSize[n], gender[k], year[j], None, None, page)
+                                        for d in range(0, len(data["Products"])):
+                                            print(d)
+                                            try:
+                                                id = data["Products"][d]["id"]
+                                                if id not in id_list:
+                                                    id_list.append(id)
+                                            except IndexError:
+                                                print("Ouch there's no id for this shoe, something might be wrong......")
+                                                f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+str(gender[k])+" in size "+str(shoeSize[n])+" has no id.")
+                                        print("Total id number is : "+ str(len(id_list)))
+                                        path_id = "%s_%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k],shoeSize[n])
+                                        if os.path.exists(path_id):
+                                            os.remove(path_id)
+                                            f = open(path_id, 'w')
+                                            for i in id_list:
+                                                f.write(i + "\n")
+                                        else:
+                                            f = open(path_id, 'w')
+                                            for i in id_list:
+                                                f.write(i + "\n")
                         else:
                             print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for "+ str(gender[k]))
-                            for d in range(0, len(data["Products"])):
-                                print(d)
-                                try: 
-                                    id = data["Products"][d]["id"]
-                                    if id not in id_list:
-                                        id_list.append(id)
-                                except IndexError:
-                                    print("Ouch there's no id for this shoe, something might be wrong......")
-                                    f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+str(gender[k])+" has no id.")
-                            print("Total id number is : "+ str(len(id_list)))
-                            path_id = "%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k])
-                            if os.path.exists(path_id):
-                                os.remove(path_id)
-                                f = open(path_id, 'w')
-                                for i in id_list:
-                                    f.write(i + "\n")
-                            else:
-                                f = open(path_id, 'w')
-                                for i in id_list:
-                                    f.write(i + "\n")
+                            page_no = math.ceil(total_no/40.0)
+                            for page in range(1, page_no):
+                                data = stockx.search(shoeType[i], "sneakers", None, gender[k], year[j], None, None, page)
+                                for d in range(0, len(data["Products"])):
+                                    print(d)
+                                    try:
+                                        id = data["Products"][d]["id"]
+                                        if id not in id_list:
+                                            id_list.append(id)
+                                    except IndexError:
+                                        print("Ouch there's no id for this shoe, something might be wrong......")
+                                        f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+str(gender[k])+" has no id.")
+                                print("Total id number is : "+ str(len(id_list)))
+                                path_id = "%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k])
+                                if os.path.exists(path_id):
+                                    os.remove(path_id)
+                                    f = open(path_id, 'w')
+                                    for i in id_list:
+                                        f.write(i + "\n")
+                                else:
+                                    f = open(path_id, 'w')
+                                    for i in id_list:
+                                        f.write(i + "\n")
                 else:
                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j]))
-                    for d in range(0, len(data["Products"])):
-                        print(d)
-                        try: 
-                            id = data["Products"][d]["id"]
-                            if id not in id_list:
-                                id_list.append(id)
-                        except IndexError:
-                            print("Ouch there's no id for this shoe, something might be wrong......")
-                            f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+" has no id.")
-                    print("Total id number is : "+ str(len(id_list)))
-                    path_id = "%s_%s_id.txt" %(shoeType[i],year[j])
-                    if os.path.exists(path_id):
-                        os.remove(path_id)
-                        f = open(path_id, 'w')
-                        for i in id_list:
-                            f.write(i + "\n")
-                    else:
-                        f = open(path_id, 'w')
-                        for i in id_list:
-                            f.write(i + "\n")
+                    page_no = math.ceil(total_no/40.0)
+                    for page in range(1, page_no):
+                        data = stockx.search(shoeType[i], "sneakers", None, None, year[j], None, None, page)
+                        for d in range(0, len(data["Products"])):
+                            print(d)
+                            try:
+                                id = data["Products"][d]["id"]
+                                if id not in id_list:
+                                    id_list.append(id)
+                            except IndexError:
+                                print("Ouch there's no id for this shoe, something might be wrong......")
+                                f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+" has no id.")
+                        print("Total id number is : "+ str(len(id_list)))
+                        path_id = "%s_%s_id.txt" %(shoeType[i],year[j])
+                        if os.path.exists(path_id):
+                            os.remove(path_id)
+                            f = open(path_id, 'w')
+                            for i in id_list:
+                                f.write(i + "\n")
+                        else:
+                            f = open(path_id, 'w')
+                            for i in id_list:
+                                f.write(i + "\n")
         else:
             print("Yeah! Extracting ID for "+ str(shoeType[i]))
-            for d in range(0, len(data["Products"])):
-                print(d)
-                try: 
-                    id = data["Products"][d]["id"]
-                    if id not in id_list:
-                        id_list.append(id)
-                except IndexError:
-                    print("Ouch there's no id for this shoe, something might be wrong......")
-                    f_no_id.writelines(str(shoeType[i])+" has no id.")
-            print("Total id number is : "+ str(len(id_list)))
-            path_id = "%s_id.txt" %(shoeType[i])
-            if os.path.exists(path_id):
-                os.remove(path_id)
-                f = open(path_id, 'w')
-                for i in id_list:
-                    f.write(i + "\n")
-            else:
-                f = open(path_id, 'w')
-                for i in id_list:
-                    f.write(i + "\n")
+            page_no = math.ceil(total_no/40.0)
+            for page in range(1, page_no):
+                data = stockx.search(shoeType[i], "sneakers", None, None, None, None, None, None, page)
+                for d in range(0, len(data["Products"])):
+                    print(d)
+                    try:
+                        id = data["Products"][d]["id"]
+                        if id not in id_list:
+                            id_list.append(id)
+                    except IndexError:
+                        print("Ouch there's no id for this shoe, something might be wrong......")
+                        f_no_id.writelines(str(shoeType[i])+" has no id.")
+                print("Total id number is : "+ str(len(id_list)))
+                path_id = "%s_id.txt" %(shoeType[i])
+                if os.path.exists(path_id):
+                    os.remove(path_id)
+                    f = open(path_id, 'w')
+                    for i in id_list:
+                        f.write(i + "\n")
+                else:
+                    f = open(path_id, 'w')
+                    for i in id_list:
+                        f.write(i + "\n")
     return id_list
 
-<<<<<<< HEAD
+
+
+
+
+
 print(find_id(["adidas"],[2010],["women"],[10.5]))
-=======
+
 
 #print(find_id(["adidas"],[2010],["women"],[10.5]))
 
 #print(find_id(["adidas"],[2020],["women"],[1]))
 
 print(find_id(["new balance"],year_list,gender_list,shoeSize_list))
->>>>>>> 30f4240558f47ab4b6ebf0241f19afe06fec08db
+
 
 
 '''def find_id(shoetype,lowest_range, highest_range):
