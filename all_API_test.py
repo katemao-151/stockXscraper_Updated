@@ -134,17 +134,17 @@ def find_id(shoeType, year, gender,shoeSize):
                                             except IndexError:
                                                 print("Ouch there's no id for this shoe, something might be wrong......")
                                                 f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+str(gender[k])+" in size "+str(shoeSize[n])+" has no id.")
-                                        print("Total id number is : "+ str(len(id_list)))
-                                        path_id = "%s_%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k],shoeSize[n])
-                                        if os.path.exists(path_id):
-                                            os.remove(path_id)
-                                            f = open(path_id, 'w')
-                                            for i in id_list:
-                                                f.write(i + "\n")
-                                        else:
-                                            f = open(path_id, 'w')
-                                            for i in id_list:
-                                                f.write(i + "\n")
+                                    print("Total id number is : "+ str(len(id_list)))
+                                    path_id = "%s_%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k],shoeSize[n])
+                                    if os.path.exists(path_id):
+                                        os.remove(path_id)
+                                        f = open(path_id, 'w')
+                                        for i in id_list:
+                                            f.write(i + "\n")
+                                    else:
+                                        f = open(path_id, 'w')
+                                        for i in id_list:
+                                            f.write(i + "\n")
                         else:
                             print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j])+ " for "+ str(gender[k]))
                             page_no = math.ceil(total_no/40.0)
@@ -159,17 +159,17 @@ def find_id(shoeType, year, gender,shoeSize):
                                     except IndexError:
                                         print("Ouch there's no id for this shoe, something might be wrong......")
                                         f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+str(gender[k])+" has no id.")
-                                print("Total id number is : "+ str(len(id_list)))
-                                path_id = "%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k])
-                                if os.path.exists(path_id):
-                                    os.remove(path_id)
-                                    f = open(path_id, 'w')
-                                    for i in id_list:
-                                        f.write(i + "\n")
-                                else:
-                                    f = open(path_id, 'w')
-                                    for i in id_list:
-                                        f.write(i + "\n")
+                            print("Total id number is : "+ str(len(id_list)))
+                            path_id = "%s_%s_%s_id.txt" %(shoeType[i],year[j],gender[k])
+                            if os.path.exists(path_id):
+                                os.remove(path_id)
+                                f = open(path_id, 'w')
+                                for i in id_list:
+                                    f.write(i + "\n")
+                            else:
+                                f = open(path_id, 'w')
+                                for i in id_list:
+                                    f.write(i + "\n")
                 else:
                     print("Yeah! Extracting ID for "+ str(shoeType[i])+ "in " + str(year[j]))
                     page_no = math.ceil(total_no/40.0)
@@ -184,17 +184,17 @@ def find_id(shoeType, year, gender,shoeSize):
                             except IndexError:
                                 print("Ouch there's no id for this shoe, something might be wrong......")
                                 f_no_id.writelines(str(shoeType[i])+" in "+str(year[j])+" for "+" has no id.")
-                        print("Total id number is : "+ str(len(id_list)))
-                        path_id = "%s_%s_id.txt" %(shoeType[i],year[j])
-                        if os.path.exists(path_id):
-                            os.remove(path_id)
-                            f = open(path_id, 'w')
-                            for i in id_list:
-                                f.write(i + "\n")
-                        else:
-                            f = open(path_id, 'w')
-                            for i in id_list:
-                                f.write(i + "\n")
+                    print("Total id number is : "+ str(len(id_list)))
+                    path_id = "%s_%s_id.txt" %(shoeType[i],year[j])
+                    if os.path.exists(path_id):
+                        os.remove(path_id)
+                        f = open(path_id, 'w')
+                        for i in id_list:
+                            f.write(i + "\n")
+                    else:
+                        f = open(path_id, 'w')
+                        for i in id_list:
+                            f.write(i + "\n")
         else:
             print("Yeah! Extracting ID for "+ str(shoeType[i]))
             page_no = math.ceil(total_no/40.0)
@@ -209,17 +209,17 @@ def find_id(shoeType, year, gender,shoeSize):
                     except IndexError:
                         print("Ouch there's no id for this shoe, something might be wrong......")
                         f_no_id.writelines(str(shoeType[i])+" has no id.")
-                print("Total id number is : "+ str(len(id_list)))
-                path_id = "%s_id.txt" %(shoeType[i])
-                if os.path.exists(path_id):
-                    os.remove(path_id)
-                    f = open(path_id, 'w')
-                    for i in id_list:
-                        f.write(i + "\n")
-                else:
-                    f = open(path_id, 'w')
-                    for i in id_list:
-                        f.write(i + "\n")
+            print("Total id number is : "+ str(len(id_list)))
+            path_id = "%s_id.txt" %(shoeType[i])
+            if os.path.exists(path_id):
+                os.remove(path_id)
+                f = open(path_id, 'w')
+                for i in id_list:
+                    f.write(i + "\n")
+            else:
+                f = open(path_id, 'w')
+                for i in id_list:
+                    f.write(i + "\n")
     return id_list
 
 
