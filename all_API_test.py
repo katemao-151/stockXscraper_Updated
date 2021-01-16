@@ -177,7 +177,6 @@ def find_id(shoeType, year, gender,shoeSize):
                     f.write(i + "\n")
     return id_list
 
-
 print(find_id(["adidas"],[2010],["women"],[10.5]))
 
 
