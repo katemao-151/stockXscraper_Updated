@@ -1,4 +1,3 @@
-
 import requests
 import os
 from time import sleep
@@ -6,6 +5,7 @@ from random import randint
 import urllib.request
 import shutil
 import re
+import json
 
 ############################################### below are the headers information that we use to avoid getting caught  #########################################################
 
@@ -23,6 +23,10 @@ item_info_api_2 = "https://stockx.com/api/products/%s/%s/"
 price_info = "chart?start_date=all&end_date=2020-05-03&intervals=100&format=highstock&currency=USD&country=US"
 sell_info = "activity?state=480&currency=USD&limit=10000&page=%s&sort=createdAt&order=DESC&country=US"
 
+try:
+    from json.decoder import JSONDecodeError
+except ImportError:
+    JSONDecodeError = ValueError
 
 class StockX():
 
@@ -73,7 +77,8 @@ class StockX():
         print(URL)
         try:
             r = requests.get(url = URL, headers=send_headers)
-        except json.decoder.JSONDecodeError:
+            data = r.json()
+        except Exception as e:
             print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list-counter))+"left")
             time.sleep(30)
             if counter != stop_count:
@@ -86,13 +91,14 @@ class StockX():
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
                     "Accept-Language": "zh-CN,zh;q=0.8"}
                 r = requests.get(url = URL, headers=send_headers)
+                data = r.json()
             else:
                 print("We have used all headers!! Save current progress and abort the program!!")
                 f = open("all_missing_shoe_list.txt","a")
                 f.writelines(str(temp_url))
                 f.close()
-                return 0
-        data = r.json()
+                data = None
+        
         return data
 
 
