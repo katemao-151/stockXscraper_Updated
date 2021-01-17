@@ -71,13 +71,14 @@ class StockX():
             temp_url = temp_url + page_shoe%page
         URL = root_url%temp_url
         print(URL)
-
         try:
             r = requests.get(url = URL, headers=send_headers)
         except ValueError:
             print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list-counter))+"left")
             time.sleep(30)
             if counter != stop_count:
+                print(counter)
+                print(stop_count)
                 counter +=1
                 send_headers = {
                     "User-Agent": header_list[counter],
