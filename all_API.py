@@ -73,7 +73,7 @@ class StockX():
         print(URL)
         try:
             r = requests.get(url = URL, headers=send_headers)
-        except ValueError:
+        except json.decoder.JSONDecodeError:
             print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list-counter))+"left")
             time.sleep(30)
             if counter != stop_count:
