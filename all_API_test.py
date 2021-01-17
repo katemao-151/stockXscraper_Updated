@@ -198,7 +198,7 @@ def find_id(shoeType, year, gender,shoeSize):
             print("Yeah! Extracting ID for "+ str(shoeType[i]))
             page_no = math.ceil(total_no/40.0)
             for page in range(1, page_no+1):
-                data = stockx.search(shoeType[i], "sneakers", None, None, None, None, None, None, page)
+                data = stockx.search(shoeType[i], "sneakers", None, None, None, None, None, page)
                 for d in range(0, len(data["Products"])):
                     print(d)
                     try:
@@ -234,7 +234,7 @@ def find_id(shoeType, year, gender,shoeSize):
 
 #print(find_id(["new balance"],year_list,gender_list,shoeSize_list))
 
-print(find_id(["new balance"],year_list,gender_list,shoeSize_list))
+print(find_id(["puma"],year_list,gender_list,shoeSize_list))
 
 '''def find_id(shoetype,lowest_range, highest_range):
     id_list = []
