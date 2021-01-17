@@ -79,8 +79,8 @@ class StockX():
             r = requests.get(url = URL, headers=send_headers)
             data = r.json()
         except Exception as e:
-            print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list-counter))+"left")
-            time.sleep(30)
+            print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
+            sleep(30)
             if counter != stop_count:
                 print(counter)
                 print(stop_count)
