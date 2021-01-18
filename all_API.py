@@ -75,6 +75,7 @@ class StockX():
             temp_url = temp_url + page_shoe%page
         URL = root_url%temp_url
         print(URL)
+        data = None
         try:
             r = requests.get(url = URL, headers=send_headers)
             data = r.json()
@@ -98,7 +99,7 @@ class StockX():
                     r = requests.get(url = URL, headers=send_headers)
                     data = r.json()
                 except Exception as e:
-                    caught = True
+                    #caught = True
                     print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
                     time.sleep(120)
                     if counter != stop_count:
@@ -115,14 +116,11 @@ class StockX():
                         f = open("all_missing_shoe_list.txt","a")
                         f.writelines(str(temp_url))
                         f.close()
-                        data = None
             else:
                 print("We have used all headers!! Save current progress and abort the program!!")
                 f = open("all_missing_shoe_list.txt","a")
                 f.writelines(str(temp_url))
                 f.close()
-                data = None
-        
         return data
 
 
