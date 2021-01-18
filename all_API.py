@@ -17,6 +17,8 @@ for line in lines:
     line = line.strip()
     header_list.append(line)
 
+#print(header_list)
+
 item_info_api = "https://stockx.com/api/products/%s/"
 item_info_api_2 = "https://stockx.com/api/products/%s/%s/"
 
@@ -33,6 +35,9 @@ class StockX():
     def __init__(self):
         self.x = 0
         self.y = 0
+    
+    def getHeaderList(self):
+        return header_list
 
     def search(self,type, category, size, gender, year, lowest_range, highest_range, page):
         # 这个方程是一个搜索api，方程里的参数可以汇聚成一个url，注意参数之间不要加不必要的空格
@@ -47,14 +52,8 @@ class StockX():
         market_shoe = "market.lowestAsk=range(%s|%s)&"
         page_shoe = "&page=%s"
 
-        counter = 0
-        stop_count = len(header_list)-1
-
-        send_headers = {
-        "User-Agent": header_list[counter],
-        "Connection": "keep-alive",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-        "Accept-Language": "zh-CN,zh;q=0.8"}
+        #counter = 0
+        #stop_count = len(header_list)-1
 
         #url = "https://stockx.com/api/browse?_tags=eqt,%s&productCategory=%s&shoeSize=%s&gender=%s&year=%s&market.lowestAsk=range(%s|%s)&sort=recent_asks&order=DESC"
         #https://stockx.com/api/browse?_tags=adidas&productCategory=sneakers&shoeSize=10.5&gender=women&year=2019&market.lowestAsk=range(300|200)&&page=1sort=recent_asks&order=DESC
@@ -76,41 +75,54 @@ class StockX():
         URL = root_url%temp_url
         print(URL)
         data = None
+        hl = self.getHeaderList()
+        #print(hl)
+        send_headers = {
+            "User-Agent": hl[0],
+            "Connection": "keep-alive",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+            "Accept-Language": "zh-CN,zh;q=0.8"}
         try:
             r = requests.get(url = URL, headers=send_headers)
             data = r.json()
         except Exception as e:
             caught = True
-            print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
-            sleep(120)
+            print("Damn they caught us!! Switch to the next header. We have "+str(len(hl))+" headers left")
+            sleep(15)
             #while caught:
             #print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
             #sleep(30)
-            if counter != stop_count:
-                print(counter)
-                print(stop_count)
-                counter +=1
-                send_headers = {s
-                     "User-Agent": header_list[counter],
+            if len(hl) != 0:
+                #print(counter)
+                #print(stop_count)
+                #counter +=1
+                #print(hl)
+                #print(len(hl))
+                hl.remove(hl[0])
+                #print(len(hl))
+                send_headers = {
+                    "User-Agent": hl[0],
                     "Connection": "keep-alive",
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
                     "Accept-Language": "zh-CN,zh;q=0.8"}
                 try:
                     r = requests.get(url = URL, headers=send_headers)
                     data = r.json()
+                    print("HERE")
                 except Exception as e:
                     #caught = True
-                    print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
+                    print("Damn they caught us!! Switch to the next header. We have "+str(len(hl))+" left")
                     sleep(120)
-                    if counter != stop_count:
-                        print(counter)
-                        print(stop_count)
-                        counter +=1
+                    if len(hl) != 0:
+                        hl.remove(hl[0])
                         send_headers = {
-                            "User-Agent": header_list[counter],
+                            "User-Agent": hl[0],
                             "Connection": "keep-alive",
                             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
                             "Accept-Language": "zh-CN,zh;q=0.8"}
+                        print(hl[0])
+                        r = requests.get(url = URL, headers=send_headers)
+                        data = r.json()
                     else:
                         print("We have used all headers!! Save current progress and abort the program!!")
                         f = open("all_missing_shoe_list.txt","a")
