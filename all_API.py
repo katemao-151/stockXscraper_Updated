@@ -79,19 +79,41 @@ class StockX():
             r = requests.get(url = URL, headers=send_headers)
             data = r.json()
         except Exception as e:
-            print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list-counter))+"left")
-            time.sleep(30)
+            caught = True
+            print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
+            time.sleep(120)
+            #while caught:
             if counter != stop_count:
                 print(counter)
                 print(stop_count)
                 counter +=1
                 send_headers = {
-                    "User-Agent": header_list[counter],
+                     "User-Agent": header_list[counter],
                     "Connection": "keep-alive",
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
                     "Accept-Language": "zh-CN,zh;q=0.8"}
-                r = requests.get(url = URL, headers=send_headers)
-                data = r.json()
+                try:
+                    r = requests.get(url = URL, headers=send_headers)
+                    data = r.json()
+                except Exception as e:
+                    caught = True
+                    print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
+                    time.sleep(120)
+                    if counter != stop_count:
+                        print(counter)
+                        print(stop_count)
+                        counter +=1
+                        send_headers = {
+                            "User-Agent": header_list[counter],
+                            "Connection": "keep-alive",
+                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                            "Accept-Language": "zh-CN,zh;q=0.8"}
+                    else:
+                        print("We have used all headers!! Save current progress and abort the program!!")
+                        f = open("all_missing_shoe_list.txt","a")
+                        f.writelines(str(temp_url))
+                        f.close()
+                        data = None
             else:
                 print("We have used all headers!! Save current progress and abort the program!!")
                 f = open("all_missing_shoe_list.txt","a")
