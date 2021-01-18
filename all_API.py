@@ -101,7 +101,7 @@ class StockX():
                 except Exception as e:
                     #caught = True
                     print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
-                    time.sleep(120)
+                    sleep(120)
                     if counter != stop_count:
                         print(counter)
                         print(stop_count)
