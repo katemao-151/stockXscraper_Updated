@@ -81,13 +81,15 @@ class StockX():
         except Exception as e:
             caught = True
             print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
-            time.sleep(120)
+            sleep(120)
             #while caught:
+            #print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
+            #sleep(30)
             if counter != stop_count:
                 print(counter)
                 print(stop_count)
                 counter +=1
-                send_headers = {
+                send_headers = {s
                      "User-Agent": header_list[counter],
                     "Connection": "keep-alive",
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
