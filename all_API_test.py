@@ -134,10 +134,10 @@ def find_id(shoeType, year, gender,shoeSize):
                                                     path_id = "%s_%s_%s_%s_id.txt" %(shoeType[i],year[n],gender[j],shoeSize[k])
                                                     if os.path.exists(path_id):
                                                         os.remove(path_id)
-                                                        f = open(path_id, 'w')
+                                                        f = open(path_id, 'a')
                                                         f.write(id + "\n")
                                                     else:
-                                                        f = open(path_id, 'w')
+                                                        f = open(path_id, 'a')
                                                         f.write(id + "\n")
                                             except IndexError:
                                                 print("Ouch there's no id for this shoe, something might be wrong......")
@@ -154,13 +154,14 @@ def find_id(shoeType, year, gender,shoeSize):
                                         id = data["Products"][d]["id"]
                                         if id not in id_list:
                                             id_list.append(id)
-                                            path_id = "%s_%s_%s_id.txt" %(shoeType[i],gender[j],shoeSize[k])
+                                            #path_id = "%s_%s_%s_id.txt" %(shoeType[i],gender[j],shoeSize[k])
+                                            path_id = "new_balance_with_year.txt"
                                             if os.path.exists(path_id):
                                                 os.remove(path_id)
-                                                f = open(path_id, 'w')
+                                                f = open(path_id, 'a')
                                                 f.write(id + "\n")
                                             else:
-                                                f = open(path_id, 'w')
+                                                f = open(path_id, 'a')
                                                 f.write(id + "\n")
                                     except IndexError:
                                         print("Ouch there's no id for this shoe, something might be wrong......")
@@ -178,13 +179,14 @@ def find_id(shoeType, year, gender,shoeSize):
                                 id = data["Products"][d]["id"]
                                 if id not in id_list:
                                     id_list.append(id)
-                                    path_id = "%s_%s_id.txt" %(shoeType[i],gender[j])
+                                    #path_id = "%s_%s_id.txt" %(shoeType[i],gender[j])
+                                    path_id = "new_balance_with_year.txt"
                                     if os.path.exists(path_id):
                                         os.remove(path_id)
-                                        f = open(path_id, 'w')
+                                        f = open(path_id, 'a')
                                         f.write(id + "\n")
                                     else:
-                                        f = open(path_id, 'w')
+                                        f = open(path_id, 'a')
                                         f.write(id + "\n")
                             except IndexError:
                                 print("Ouch there's no id for this shoe, something might be wrong......")
@@ -202,13 +204,14 @@ def find_id(shoeType, year, gender,shoeSize):
                         id = data["Products"][d]["id"]
                         if id not in id_list:
                             id_list.append(id)
-                            path_id = "%s_id.txt" %(shoeType[i])
+                            #path_id = "%s_id.txt" %(shoeType[i])
+                            path_id = "new_balance_with_year.txt"
                             if os.path.exists(path_id):
                                 os.remove(path_id)
-                                f = open(path_id, 'w')
+                                f = open(path_id, 'a')
                                 f.write(id + "\n")
                         else:
-                            f = open(path_id, 'w')
+                            f = open(path_id, 'a')
                             f.write(id + "\n")
                     except IndexError:
                         print("Ouch there's no id for this shoe, something might be wrong......")

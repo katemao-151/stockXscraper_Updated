@@ -36,8 +36,25 @@ class StockX():
         self.x = 0
         self.y = 0
     
-    def getHeaderList(self):
-        return header_list
+    def change_header(self,url,sent_headers,header_list):
+        try:
+            r = requests.get(url = url, headers=sent_headers)
+            data = r.json()
+        except Exception as e:
+            caught = True
+            print("Damn they caught us!! Switch to the next header. We have "+str(len(header_list))+" headers left")
+            sleep(120)
+            header_list.remove(header_list[0])
+            #print(len(hl))
+            send_headers = {
+                "User-Agent": header_list[0],
+                "Connection": "keep-alive",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                "Accept-Language": "zh-CN,zh;q=0.8"}
+            r = requests.get(url = url, headers=send_headers)
+            data = r.json()
+        
+        return data
 
     def search(self,type, category, size, gender, year, lowest_range, highest_range, page):
         # 这个方程是一个搜索api，方程里的参数可以汇聚成一个url，注意参数之间不要加不必要的空格
@@ -75,65 +92,30 @@ class StockX():
         URL = root_url%temp_url
         print(URL)
         data = None
-        hl = self.getHeaderList()
         #print(hl)
         send_headers = {
-            "User-Agent": hl[0],
+            "User-Agent": header_list[0],
             "Connection": "keep-alive",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
             "Accept-Language": "zh-CN,zh;q=0.8"}
-        try:
-            r = requests.get(url = URL, headers=send_headers)
-            data = r.json()
-        except Exception as e:
-            caught = True
-            print("Damn they caught us!! Switch to the next header. We have "+str(len(hl))+" headers left")
-            sleep(15)
-            #while caught:
-            #print("Damn they caught us!! Switch to the next header. We have used "+ str(counter) + "headers and have "+ str(len(header_list)-counter)+"left")
-            #sleep(30)
-            if len(hl) != 0:
-                #print(counter)
-                #print(stop_count)
-                #counter +=1
-                #print(hl)
-                #print(len(hl))
-                hl.remove(hl[0])
-                #print(len(hl))
-                send_headers = {
-                    "User-Agent": hl[0],
-                    "Connection": "keep-alive",
-                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-                    "Accept-Language": "zh-CN,zh;q=0.8"}
-                try:
-                    r = requests.get(url = URL, headers=send_headers)
-                    data = r.json()
-                    print("HERE")
-                except Exception as e:
-                    #caught = True
-                    print("Damn they caught us!! Switch to the next header. We have "+str(len(hl))+" left")
-                    sleep(120)
-                    if len(hl) != 0:
-                        hl.remove(hl[0])
-                        send_headers = {
-                            "User-Agent": hl[0],
-                            "Connection": "keep-alive",
-                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-                            "Accept-Language": "zh-CN,zh;q=0.8"}
-                        print(hl[0])
-                        r = requests.get(url = URL, headers=send_headers)
-                        data = r.json()
-                    else:
-                        print("We have used all headers!! Save current progress and abort the program!!")
-                        f = open("all_missing_shoe_list.txt","a")
-                        f.writelines(str(temp_url))
-                        f.close()
-            else:
-                print("We have used all headers!! Save current progress and abort the program!!")
-                f = open("all_missing_shoe_list.txt","a")
-                f.writelines(str(temp_url))
-                f.close()
+        if len(header_list)!=0:
+            while(True):
+                if self.change_header(URL,send_headers,header_list):
+                    data = self.change_header(URL,send_headers,header_list)
+                    break
+                else:
+                    sleep(15)
+                    continue
+        else:
+            print("We have used all headers!! Save current progress and abort the program!!")
+            f = open("all_missing_shoe_list.txt","a")
+            f.writelines(str(temp_url))
+            f.close()
         return data
+    
+    
+
+
 
 
     def extract_ID(self,data):
