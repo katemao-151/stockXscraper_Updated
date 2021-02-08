@@ -37,22 +37,33 @@ class StockX():
         self.y = 0
     
     def change_header(self,url,sent_headers,header_list):
-        try:
-            r = requests.get(url = url, headers=sent_headers)
-            data = r.json()
-        except Exception as e:
-            caught = True
-            print("Damn they caught us!! Switch to the next header. We have "+str(len(header_list))+" headers left")
-            sleep(120)
-            header_list.remove(header_list[0])
-            #print(len(hl))
-            send_headers = {
-                "User-Agent": header_list[0],
-                "Connection": "keep-alive",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-                "Accept-Language": "zh-CN,zh;q=0.8"}
-            r = requests.get(url = url, headers=send_headers)
-            data = r.json()
+        caught = True
+        got_exception = True
+        while(caught):
+            try:
+                r = requests.get(url = url, headers=sent_headers)
+                data = r.json()
+            except Exception as e:
+                caught = True
+                got_exception = True
+                print("Damn they caught us!! Switch to the next header. We have "+str(len(header_list))+" headers left")
+                sleep(120)
+                #print(len(hl))
+                with open("headers_new.txt","w"):
+                    new_f = f.readlines()
+                    for line in new_f:
+                        if header_list[0] != line:
+                            new_f.write(line)
+                header_list.remove(header_list[0])
+                send_headers = {
+                    "User-Agent": header_list[0],
+                    "Connection": "keep-alive",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                    "Accept-Language": "zh-CN,zh;q=0.8"}
+                #r = requests.get(url = url, headers=send_headers)
+                #data = r.json()
+            if got_exception==False:
+                caught = False
         
         return data
 
