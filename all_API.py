@@ -35,6 +35,14 @@ class StockX():
     def __init__(self):
         self.x = 0
         self.y = 0
+
+    def removeHeaderfromFile(self, header_removed, header_file):
+        with open(str(header_file),"w") as f:
+            for line in f:
+                if line != header_removed:
+                    f.write(line)
+        f.close()
+        return hedaer_file
     
     def change_header(self,url,sent_headers,header_list):
         caught = True
@@ -49,12 +57,9 @@ class StockX():
                 print("Damn they caught us!! Switch to the next header. We have "+str(len(header_list))+" headers left")
                 sleep(120)
                 #print(len(hl))
-                with open("headers_new.txt","w"):
-                    new_f = f.readlines()
-                    for line in new_f:
-                        if header_list[0] != line:
-                            new_f.write(line)
+                removeHeaderfromFile(header_list[0],header_new.txt)
                 header_list.remove(header_list[0])
+                
                 send_headers = {
                     "User-Agent": header_list[0],
                     "Connection": "keep-alive",
